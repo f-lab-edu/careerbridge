@@ -48,6 +48,8 @@ CareerBridge는 진로 탐색에 어려움을 겪는 사용자(Mentee)와 실제
 ---
 ## 3. 주요 기능
 
+![careerbridge_usecase-diagram.png](..%2FUsers%2Fuser%2FDownloads%2Fcareerbridge_usecase-diagram.png)
+
 ### 사용자 기능
 - 회원가입 및 로그인
 - JWT 기반 인증/인가
