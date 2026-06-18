@@ -1,0 +1,81 @@
+<h2>CareerBridge Use Case Map</h2>
+<p class="subtitle">README와 현재 백엔드 구조를 기준으로 잡은 전체 흐름 초안입니다. 지금은 "무엇을 MVP로 볼지"를 정하는 단계예요.</p>
+
+<div class="section">
+  <div class="label">Primary Actors</div>
+  <div class="cards">
+    <div class="card" data-choice="mentee" onclick="toggleSelect(this)">
+      <div class="card-body">
+        <h3>Mentee</h3>
+        <p>진로 탐색자. 관심 직무를 설정하고 멘토를 찾고, 상담/채팅/콘텐츠를 통해 의사결정을 돕습니다.</p>
+      </div>
+    </div>
+    <div class="card" data-choice="mentor" onclick="toggleSelect(this)">
+      <div class="card-body">
+        <h3>Mentor</h3>
+        <p>현직자. 프로필과 상담 상품/콘텐츠를 등록하고, 문의와 상담 요청을 관리합니다.</p>
+      </div>
+    </div>
+    <div class="card" data-choice="admin" onclick="toggleSelect(this)">
+      <div class="card-body">
+        <h3>Admin</h3>
+        <p>운영자. 사용자/멘토 검수, 신고, 결제/정산 상태, 플랫폼 품질을 관리합니다.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <div class="label">Candidate Use Case Groups</div>
+  <div class="options" data-multiselect>
+    <div class="option" data-choice="auth" onclick="toggleSelect(this)">
+      <div class="letter">1</div>
+      <div class="content">
+        <h3>회원과 권한 기반</h3>
+        <p>가입, 로그인, JWT 인증, 멘토/멘티/관리자 역할, 내 정보 관리</p>
+      </div>
+    </div>
+    <div class="option" data-choice="profile" onclick="toggleSelect(this)">
+      <div class="letter">2</div>
+      <div class="content">
+        <h3>멘토/멘티 프로필</h3>
+        <p>멘토 경력/직무/회사/가능 상담 영역, 멘티 관심 직무와 목표 설정</p>
+      </div>
+    </div>
+    <div class="option" data-choice="discovery" onclick="toggleSelect(this)">
+      <div class="letter">3</div>
+      <div class="content">
+        <h3>멘토 탐색과 추천</h3>
+        <p>검색, 필터, 직무 기반 추천, 멘토 상세 조회, 북마크</p>
+      </div>
+    </div>
+    <div class="option" data-choice="consulting" onclick="toggleSelect(this)">
+      <div class="letter">4</div>
+      <div class="content">
+        <h3>상담 요청과 예약</h3>
+        <p>상담 상품 선택, 예약 요청, 승인/거절, 일정 확정, 상태 변경</p>
+      </div>
+    </div>
+    <div class="option" data-choice="chat" onclick="toggleSelect(this)">
+      <div class="letter">5</div>
+      <div class="content">
+        <h3>1:1 채팅</h3>
+        <p>상담 전후 질문, 실시간 메시지, 읽음/알림, 채팅방 상태 관리</p>
+      </div>
+    </div>
+    <div class="option" data-choice="payment" onclick="toggleSelect(this)">
+      <div class="letter">6</div>
+      <div class="content">
+        <h3>결제와 정산</h3>
+        <p>상담 상품 결제, 결제 상태, 취소/환불, 멘토 정산 기준</p>
+      </div>
+    </div>
+    <div class="option" data-choice="review" onclick="toggleSelect(this)">
+      <div class="letter">7</div>
+      <div class="content">
+        <h3>리뷰와 신뢰</h3>
+        <p>상담 완료 후 리뷰, 평점, 신고, 멘토 품질 관리</p>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,15 @@
+{"type":"owner-pid-invalid","pid":25524,"reason":"dead at startup"}
+{"type":"server-started","port":65429,"host":"127.0.0.1","url_host":"localhost","url":"http://localhost:65429","screen_dir":"C:\\careerbridge\\.superpowers\\brainstorm\\779-1780912108\\content","state_dir":"C:\\careerbridge\\.superpowers\\brainstorm\\779-1780912108\\state"}
+{"source":"user-event","type":"click","text":"Mentee\n        진로 탐색자. 관심 직무를 설정하고 멘토를 찾고, 상담/채팅/콘텐츠를 통해 의사결정을 돕습니다.","choice":"mentee","id":null,"timestamp":1780912752385}
+{"source":"user-event","type":"click","text":"Mentee\n        진로 탐색자. 관심 직무를 설정하고 멘토를 찾고, 상담/채팅/콘텐츠를 통해 의사결정을 돕습니다.","choice":"mentee","id":null,"timestamp":1780912753118}
+{"source":"user-event","type":"click","text":"Mentee\n        진로 탐색자. 관심 직무를 설정하고 멘토를 찾고, 상담/채팅/콘텐츠를 통해 의사결정을 돕습니다.","choice":"mentee","id":null,"timestamp":1780912753547}
+{"source":"user-event","type":"click","text":"Mentor\n        현직자. 프로필과 상담 상품/콘텐츠를 등록하고, 문의와 상담 요청을 관리합니다.","choice":"mentor","id":null,"timestamp":1780912754104}
+{"source":"user-event","type":"click","text":"1\n      \n        회원과 권한 기반\n        가입, 로그인, JWT 인증, 멘토/멘티/관리자 역할, 내 정보 관리","choice":"auth","id":null,"timestamp":1780912758676}
+{"source":"user-event","type":"click","text":"1\n      \n        회원과 권한 기반\n        가입, 로그인, JWT 인증, 멘토/멘티/관리자 역할, 내 정보 관리","choice":"auth","id":null,"timestamp":1780912758904}
+{"source":"user-event","type":"click","text":"7\n      \n        리뷰와 신뢰\n        상담 완료 후 리뷰, 평점, 신고, 멘토 품질 관리","choice":"review","id":null,"timestamp":1780912768315}
+{"source":"user-event","type":"click","text":"7\n      \n        리뷰와 신뢰\n        상담 완료 후 리뷰, 평점, 신고, 멘토 품질 관리","choice":"review","id":null,"timestamp":1780912768848}
+{"source":"user-event","type":"click","text":"7\n      \n        리뷰와 신뢰\n        상담 완료 후 리뷰, 평점, 신고, 멘토 품질 관리","choice":"review","id":null,"timestamp":1780912769328}
+{"source":"user-event","type":"click","text":"7\n      \n        리뷰와 신뢰\n        상담 완료 후 리뷰, 평점, 신고, 멘토 품질 관리","choice":"review","id":null,"timestamp":1780912769476}
+{"source":"user-event","type":"click","text":"7\n      \n        리뷰와 신뢰\n        상담 완료 후 리뷰, 평점, 신고, 멘토 품질 관리","choice":"review","id":null,"timestamp":1780912769860}
+{"source":"user-event","type":"click","text":"7\n      \n        리뷰와 신뢰\n        상담 완료 후 리뷰, 평점, 신고, 멘토 품질 관리","choice":"review","id":null,"timestamp":1780912770690}
+{"type":"server-stopped","reason":"idle timeout"}
