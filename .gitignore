@@ -43,5 +43,5 @@ docker-compose.yml
 .vscode/
 
 settings.gradle
-
+/src/test/
 
