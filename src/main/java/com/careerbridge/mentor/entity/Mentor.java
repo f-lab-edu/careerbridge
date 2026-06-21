@@ -28,7 +28,7 @@ public class Mentor {
     private String jobCategory;
 
     @Column(nullable = false)
-    private int personalHistory;
+    private Integer personalHistory;
 
     @Column(nullable = false)
     private String introduction;
