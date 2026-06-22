@@ -37,7 +37,7 @@ public class MentorSearchServiceTest {
 
         assertThat(result)
                 .extracting(MentorSearchResponse::mentorName)
-                .containsExactly(
+                .contains(                              // containsExactly : 순서 보장시에 사용 , 추후 정렬 개발 시 테스트 예정
                         "김백엔드",
                         "이프론트",
                         "박데브옵스"

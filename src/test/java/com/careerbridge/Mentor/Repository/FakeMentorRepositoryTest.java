@@ -12,7 +12,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 public class FakeMentorRepositoryTest {
 
-    private FakeMentorRepository repository;
+    private  FakeMentorRepository repository;
 
     @BeforeEach
     void setUp() {
