@@ -1,5 +1,6 @@
 package com.careerbridge.mentor.entity;
 
+import com.careerbridge.user.entity.User;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
@@ -38,6 +39,10 @@ public class Mentor {
 
     @Enumerated(EnumType.STRING)
     private VisibilityStatus visibilityStatus;
+
+    @OneToOne
+    @JoinColumn(name = "user_id", nullable = false, unique = true)
+    private User user;
 
     protected Mentor() {
 
