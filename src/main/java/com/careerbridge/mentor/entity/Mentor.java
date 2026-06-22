@@ -16,10 +16,6 @@ public class Mentor {
 
     @Column(nullable = false)
     @NotBlank
-    private String mentorName;
-
-    @Column(nullable = false)
-    @NotBlank
     private String companyName;
 
     @Column(nullable = false)
@@ -48,11 +44,11 @@ public class Mentor {
 
     }
 
-    public Mentor(Long id, String mentorName, String companyName,
+    public Mentor(Long id, User user, String companyName,
                   String position, String jobCategory, int personalHistory,
                   String introduction, VerificationStatus verificationStatus, VisibilityStatus visibilityStatus){
         this.id = id;
-        this.mentorName = mentorName;
+        this.user = user;
         this.companyName = companyName;
         this.position = position;
         this.jobCategory = jobCategory;
@@ -60,6 +56,10 @@ public class Mentor {
         this.introduction = introduction;
         this.verificationStatus = verificationStatus;
         this.visibilityStatus = visibilityStatus;
+    }
+
+    public String getMentorName() {
+        return user.getName();
     }
 
     public boolean isSearchable() {
@@ -81,17 +81,11 @@ public class Mentor {
 
         String lowerKeyword = keyword.toLowerCase();
 
-        return mentorName.toLowerCase().contains(lowerKeyword)
+        return getMentorName().toLowerCase().contains(lowerKeyword)
                 || companyName.toLowerCase().contains(lowerKeyword)
                 || position.toLowerCase().contains(lowerKeyword)
                 || introduction.toLowerCase().contains(lowerKeyword);
     }
 
-    public boolean hasMinimunExperience(Integer minYearsOfExperience) {
-        if (minYearsOfExperience == null) {
-            return true;
-        }
-        return this.personalHistory >= minYearsOfExperience;
-    }
 
 }

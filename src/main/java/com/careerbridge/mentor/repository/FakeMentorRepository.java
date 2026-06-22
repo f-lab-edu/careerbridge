@@ -3,6 +3,9 @@ package com.careerbridge.mentor.repository;
 import com.careerbridge.mentor.entity.Mentor;
 import com.careerbridge.mentor.entity.VerificationStatus;
 import com.careerbridge.mentor.entity.VisibilityStatus;
+import com.careerbridge.user.entity.User;
+import com.careerbridge.user.entity.UserRole;
+import com.careerbridge.user.entity.UserStatus;
 
 import java.util.List;
 
@@ -10,7 +13,7 @@ public class FakeMentorRepository implements MentorRepository {
     private final List<Mentor> mentors = List.of(
             new Mentor(
                     1L,
-                    "김백엔드",
+                    createMentorUser("mentor1@example.com", "김백엔드"),
                     "네이버",
                     "Backend Developer",
                     "Backend",
@@ -21,7 +24,7 @@ public class FakeMentorRepository implements MentorRepository {
             ),
             new Mentor(
                     2L,
-                    "이프론트",
+                    createMentorUser("mentor2@example.com", "이프론트"),
                     "카카오",
                     "Frontend Developer",
                     "Frontend",
@@ -32,7 +35,7 @@ public class FakeMentorRepository implements MentorRepository {
             ),
             new Mentor(
                     3L,
-                    "박데브옵스",
+                    createMentorUser("mentor3@example.com", "박데브옵스"),
                     "쿠팡",
                     "DevOps Engineer",
                     "DevOps",
@@ -43,7 +46,7 @@ public class FakeMentorRepository implements MentorRepository {
             ),
             new Mentor(
                     4L,
-                    "비공개멘토",
+                    createMentorUser("mentor4@example.com", "비공개멘토"),
                     "토스",
                     "Backend Developer",
                     "Backend",
@@ -54,7 +57,7 @@ public class FakeMentorRepository implements MentorRepository {
             ),
             new Mentor(
                     5L,
-                    "승인대기멘토",
+                    createMentorUser("mentor5@example.com", "미승인멘토"),
                     "라인",
                     "Backend Developer",
                     "Backend",
@@ -68,5 +71,15 @@ public class FakeMentorRepository implements MentorRepository {
     @Override
     public List<Mentor> findAll() {
         return mentors;
+    }
+
+
+    private static User createMentorUser(String email, String name) {
+        return User.create(
+                email,
+                "FakePassword1!",
+                name,
+                UserRole.MENTOR
+        );
     }
 }

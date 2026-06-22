@@ -14,11 +14,11 @@ public record MentorSearchResponse(
 
     public static MentorSearchResponse from(Mentor mentor) {
         return new MentorSearchResponse(mentor.getId(),
-        mentor.getMentorName(),
-        mentor.getCompanyName(),
-        mentor.getPosition(),
-        mentor.getJobCategory(),
-        mentor.getPersonalHistory(),
-        mentor.getIntroduction());
+                mentor.getMentorName(),
+                mentor.getCompanyName(),
+                mentor.getPosition(),
+                mentor.getJobCategory(),
+                mentor.getPersonalHistory(),
+                mentor.getIntroduction());
     }
 }
