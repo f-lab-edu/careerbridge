@@ -5,6 +5,7 @@ import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Repository
@@ -62,6 +63,16 @@ public class FakeJobCategoryRepository implements JobCategoryRepository{
     public List<JobCategory> findByParentIsNull() {
         return categories.stream()
                 .filter(category -> category.getParent() == null).collect(Collectors.toUnmodifiableList());
+    }
+
+    @Override
+    public List<JobCategory> findByParentId(Long parentId) {
+        return List.of();
+    }
+
+    @Override
+    public Optional<JobCategory> findById(Long id) {
+        return Optional.empty();
     }
 }
 

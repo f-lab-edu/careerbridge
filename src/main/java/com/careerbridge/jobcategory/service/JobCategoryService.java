@@ -20,4 +20,16 @@ public class JobCategoryService {
                 .map(JobCategoryResponse::from)
                 .collect(Collectors.toUnmodifiableList());
     }
+
+    public List<JobCategoryResponse> getChildrenJobCategories(Long parentId){
+        return jobCategoryRepository.findByParentId(parentId).stream()
+                .map(JobCategoryResponse::from)
+                .collect(Collectors.toUnmodifiableList());
+    }
+
+    public JobCategoryResponse getJobCategory(Long id){
+        JobCategory jobCategory = jobCategoryRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 직무 카테고리입니다."));
+
+        return JobCategoryResponse.from(jobCategory);
+    }
 }
