@@ -8,15 +8,13 @@ public record JobCategoryResponse(
         Long jobCategoryId,
         String jobName,
         JobCategory parent,
-        List<JobCategoryResponse> children) {
+        List<JobCategory> children) {
 
     public static JobCategoryResponse from(JobCategory jobCategory){
         return new JobCategoryResponse(jobCategory.getId(),
                 jobCategory.getJobName(),
                 jobCategory.getParent(),
-                jobCategory.getChildren().stream()
-                        .map(JobCategoryResponse::from)
-                        .toList());
+                jobCategory.getChildren());
     }
 
 }

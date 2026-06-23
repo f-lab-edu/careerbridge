@@ -12,6 +12,7 @@ public class FakeJobCategoryRepository implements JobCategoryRepository{
     private final List<JobCategory> categories;
 
     public FakeJobCategoryRepository() {
+
         JobCategory development = new JobCategory(
                 1L,
                 "개발",
@@ -23,28 +24,29 @@ public class FakeJobCategoryRepository implements JobCategoryRepository{
                 2L,
                 "백엔드",
                 development,
-                new ArrayList<>()
+                List.of()
         );
 
         JobCategory frontend = new JobCategory(
                 3L,
                 "프론트엔드",
                 development,
-                new ArrayList<>()
+                List.of()
         );
 
         JobCategory devOps = new JobCategory(
                 4L,
                 "DevOps",
                 development,
-                new ArrayList<>()
+                List.of()
         );
 
         development.getChildren().addAll(
                 List.of(backend, frontend, devOps)
         );
 
-        categories = List.of(
+
+        this.categories = List.of(
                 development,
                 backend,
                 frontend,

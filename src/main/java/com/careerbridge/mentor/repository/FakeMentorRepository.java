@@ -6,9 +6,11 @@ import com.careerbridge.mentor.entity.VisibilityStatus;
 import com.careerbridge.user.entity.User;
 import com.careerbridge.user.entity.UserRole;
 import com.careerbridge.user.entity.UserStatus;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
+@Repository
 public class FakeMentorRepository implements MentorRepository {
     private final List<Mentor> mentors = List.of(
             new Mentor(
