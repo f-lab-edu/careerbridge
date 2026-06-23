@@ -33,7 +33,7 @@ class JobCategoryServiceTest {
         assertThat(result).hasSize(1);
         assertThat(result.get(0).jobCategoryId()).isEqualTo(1L);
         assertThat(result.get(0).jobName()).isEqualTo("개발");
-        assertThat(result.get(0).parent()).isNull();
+        assertThat(result.get(0).children()).isEqualTo(3);
     }
 
     @Test
@@ -46,7 +46,7 @@ class JobCategoryServiceTest {
 
         assertThat(development.children()).hasSize(3);
         assertThat(development.children())
-                .extracting(JobCategory::jobName)
+                .extracting(JobCategoryResponse::jobName)
                 .containsExactly(
                         "백엔드",
                         "프론트엔드",

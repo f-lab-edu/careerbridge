@@ -7,14 +7,13 @@ import java.util.List;
 public record JobCategoryResponse(
         Long jobCategoryId,
         String jobName,
-        JobCategory parent,
-        List<JobCategory> children) {
+        List<JobCategoryResponse> children) {
 
     public static JobCategoryResponse from(JobCategory jobCategory){
         return new JobCategoryResponse(jobCategory.getId(),
                 jobCategory.getJobName(),
-                jobCategory.getParent(),
-                jobCategory.getChildren());
+                jobCategory.getChildren().stream()
+                        .map(JobCategoryResponse::from).toList());
     }
 
 }
