@@ -1,5 +1,6 @@
 package com.careerbridge.jobcategory.service;
 
+import com.careerbridge.jobcategory.domain.JobCategory;
 import com.careerbridge.jobcategory.dto.JobCategoryResponse;
 import com.careerbridge.jobcategory.repository.FakeJobCategoryRepository;
 import com.careerbridge.jobcategory.repository.JobCategoryRepository;
@@ -45,7 +46,7 @@ class JobCategoryServiceTest {
 
         assertThat(development.children()).hasSize(3);
         assertThat(development.children())
-                .extracting(JobCategoryResponse::jobName)
+                .extracting(JobCategory::jobName)
                 .containsExactly(
                         "백엔드",
                         "프론트엔드",
