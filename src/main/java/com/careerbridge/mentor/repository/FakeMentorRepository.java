@@ -9,9 +9,13 @@ import com.careerbridge.user.entity.UserStatus;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public class FakeMentorRepository implements MentorRepository {
+
+    private Long nextId = 6L;
+
     private final List<Mentor> mentors = List.of(
             new Mentor(
                     1L,
@@ -73,6 +77,46 @@ public class FakeMentorRepository implements MentorRepository {
     @Override
     public List<Mentor> findAll() {
         return mentors;
+    }
+
+    @Override
+    public Optional<Mentor> findByUser(User user) {
+        return mentors.stream()
+                .filter(mentor -> mentor.getUser().getEmail().equals(user.getEmail()))
+                .findFirst();
+    }
+
+    @Override
+    public Optional<Mentor> findById(Long id) {
+        return mentors.stream().filter(mentor -> mentor.getId().equals(id))
+                .findFirst();
+    }
+
+    @Override
+    public boolean existsByUserId(Long id) {
+        return mentors.stream()
+                .anyMatch(mentor -> mentor.getUser().getId().equals(id));
+    }
+
+    @Override
+    public Mentor save(Mentor mentor) {
+        Mentor saved = Mentor.create(
+                nextId++,
+                mentor.getUser(),
+                mentor.getCompanyName(),
+                mentor.getPosition(),
+                mentor.getJobCategory(),
+                mentor.getPersonalHistory(),
+                mentor.getIntroduction());
+
+        mentors.add(saved);
+        return saved;
+    }
+
+    @Override
+    public boolean existsByUserEmail(String email) {
+        return mentors.stream()
+                .anyMatch(mentor -> mentor.getUser().getEmail().equals(email));
     }
 
 

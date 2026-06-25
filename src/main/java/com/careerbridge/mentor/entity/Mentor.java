@@ -87,5 +87,42 @@ public class Mentor {
                 || introduction.toLowerCase().contains(lowerKeyword);
     }
 
+    public void update(String companyName,
+                       String position,
+                       String jobCategory,
+                       Integer personalHistory,
+                       String introduction){
+        this.companyName = companyName;
+        this.position = position;
+        this.jobCategory = jobCategory;
+        this.personalHistory = personalHistory;
+        this.introduction = introduction;
+    }
+
+    public static Mentor create(
+            Long id,
+            User user,
+            String companyName,
+            String position,
+            String jobCategory,
+            int personalHistory,
+            String introduction
+    ) {
+        if (personalHistory < 0) {
+            throw new IllegalArgumentException("경력은 0 이상이어야 합니다.");
+        }
+
+        return new Mentor(
+                id,
+                user,
+                companyName,
+                position,
+                jobCategory,
+                personalHistory,
+                introduction,
+                VerificationStatus.PENDING,
+                VisibilityStatus.PUBLIC
+        );
+    }
 
 }
