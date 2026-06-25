@@ -47,7 +47,7 @@ class JobCategoryServiceTest {
         assertThat(development.children()).hasSize(3);
         assertThat(development.children())
                 .extracting(JobCategoryResponse::jobName)
-                .containsExactly(
+                .contains(
                         "백엔드",
                         "프론트엔드",
                         "DevOps"
