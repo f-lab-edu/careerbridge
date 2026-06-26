@@ -46,8 +46,8 @@ public class MentorProfileServiceTest {
 
         assertThat(response.id()).isNotNull();
         assertThat(response.companyName()).isEqualTo("Naver");
-        assertThat(response.position()).isEqualTo("Backend Developer");
-        assertThat(response.jobCategory()).isEqualTo("Backend");
+        assertThat(response.position()).isEqualTo("백엔드 개발자");
+        assertThat(response.jobCategory()).isEqualTo("개발");
         assertThat(response.personalHistory()).isEqualTo(10);
         assertThat(response.introduction()).isEqualTo("Spring 기반 백엔드 개발 경험이 있습니다.");
 
