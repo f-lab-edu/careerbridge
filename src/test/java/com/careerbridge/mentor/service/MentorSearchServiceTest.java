@@ -22,7 +22,7 @@ public class MentorSearchServiceTest {
         MentorRepository repository =
                 new FakeMentorRepository();
 
-        mentorService = new MentorService(repository);
+        mentorService = new MentorService(repository, null);
     }
 
     @Test

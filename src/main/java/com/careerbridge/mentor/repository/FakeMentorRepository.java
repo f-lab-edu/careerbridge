@@ -8,6 +8,7 @@ import com.careerbridge.user.entity.UserRole;
 import com.careerbridge.user.entity.UserStatus;
 import org.springframework.stereotype.Repository;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -16,7 +17,7 @@ public class FakeMentorRepository implements MentorRepository {
 
     private Long nextId = 6L;
 
-    private final List<Mentor> mentors = List.of(
+    private final List<Mentor> mentors = new ArrayList<>(List.of(
             new Mentor(
                     1L,
                     createMentorUser("mentor1@example.com", "김백엔드"),
@@ -72,6 +73,7 @@ public class FakeMentorRepository implements MentorRepository {
                     VerificationStatus.PENDING,
                     VisibilityStatus.PUBLIC
             )
+        )
     );
 
     @Override
