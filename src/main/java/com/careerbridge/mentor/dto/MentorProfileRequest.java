@@ -1,5 +1,6 @@
 package com.careerbridge.mentor.dto;
 
+import com.careerbridge.jobcategory.domain.JobCategory;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -12,7 +13,7 @@ public record MentorProfileRequest(
         String position,
 
         @NotBlank
-        String jobCategory,
+        Long jobCategoryId,
 
         @NotNull
         @Min(0)

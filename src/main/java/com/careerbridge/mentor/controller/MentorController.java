@@ -1,5 +1,6 @@
 package com.careerbridge.mentor.controller;
 
+import com.careerbridge.jobcategory.domain.JobCategory;
 import com.careerbridge.mentor.dto.MentorSearchRequest;
 import com.careerbridge.mentor.dto.MentorSearchResponse;
 import com.careerbridge.mentor.service.MentorService;
@@ -18,11 +19,11 @@ public class MentorController {
 
     @GetMapping("/api/mentors")
     public List<MentorSearchResponse> searchMentors(
-            @RequestParam(required = false) String category,
+            @RequestParam(required = false) Long jobCategoryId,
             @RequestParam(required = false) String keyword
     ) {
         MentorSearchRequest request = new MentorSearchRequest(
-                category, keyword);
+                jobCategoryId, keyword);
 
         return mentorService.searchMentors(request);
     }

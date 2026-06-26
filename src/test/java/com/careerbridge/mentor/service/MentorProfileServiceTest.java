@@ -21,7 +21,7 @@ public class MentorProfileServiceTest {
     void setUp() {
         MentorRepository repository = new FakeMentorRepository();
 
-        mentorService = new MentorService(repository, null);
+        mentorService = new MentorService(repository, null, null);
     }
 
     @Test
@@ -37,7 +37,7 @@ public class MentorProfileServiceTest {
         MentorProfileRequest request = new MentorProfileRequest(
                 "Naver",
                 "백엔드 개발자",
-                "개발",
+                1L,
                 10,
                 "Spring 기반 백엔드 개발 경험이 있습니다."
         );
@@ -47,7 +47,7 @@ public class MentorProfileServiceTest {
         assertThat(response.id()).isNotNull();
         assertThat(response.companyName()).isEqualTo("Naver");
         assertThat(response.position()).isEqualTo("백엔드 개발자");
-        assertThat(response.jobCategory()).isEqualTo("개발");
+        assertThat(response.jobCategoryId()).isEqualTo(1L);
         assertThat(response.personalHistory()).isEqualTo(10);
         assertThat(response.introduction()).isEqualTo("Spring 기반 백엔드 개발 경험이 있습니다.");
 
@@ -66,7 +66,7 @@ public class MentorProfileServiceTest {
         MentorProfileRequest request = new MentorProfileRequest(
                 "Naver",
                 "Backend Developer",
-                "Backend",
+                1L,
                 10,
                 "Spring 기반 백엔드 개발 경험이 있습니다."
         );

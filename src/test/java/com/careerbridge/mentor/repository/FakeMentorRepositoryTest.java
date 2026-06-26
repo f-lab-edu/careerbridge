@@ -1,5 +1,6 @@
 package com.careerbridge.mentor.repository;
 
+import com.careerbridge.jobcategory.repository.FakeJobCategoryRepository;
 import com.careerbridge.mentor.dto.MentorProfileRequest;
 import com.careerbridge.mentor.dto.MentorProfileResponse;
 import com.careerbridge.mentor.entity.Mentor;
@@ -18,11 +19,14 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 public class FakeMentorRepositoryTest {
 
-    private FakeMentorRepository repository;
+    private FakeMentorRepository fakeMentorRepository;
+    private FakeJobCategoryRepository fakeJobCategoryRepository;
 
     @BeforeEach
     void setUp() {
-        repository = new FakeMentorRepository();
+
+        fakeMentorRepository = new FakeMentorRepository();
+        fakeJobCategoryRepository = new FakeJobCategoryRepository();
     }
 
     @Test
@@ -30,7 +34,7 @@ public class FakeMentorRepositoryTest {
     void findAll() {
 
         // when
-        List<Mentor> mentors = repository.findAll();
+        List<Mentor> mentors = fakeMentorRepository.findAll();
 
         // then
         assertThat(mentors).hasSize(5);
@@ -39,8 +43,8 @@ public class FakeMentorRepositoryTest {
     @Test
     @DisplayName("이메일 기준으로 멘토 프로필 존재 여부를 확인할 수 있다")
     void existsByUserEmail() {
-        assertThat(repository.existsByUserEmail("mentor@example.com")).isTrue();
-        assertThat(repository.existsByUserEmail("unknown@example.com")).isTrue();
+        assertThat(fakeMentorRepository.existsByUserEmail("mentor@example.com")).isTrue();
+        assertThat(fakeMentorRepository.existsByUserEmail("unknown@example.com")).isTrue();
     }
 
     @Test
@@ -51,7 +55,7 @@ public class FakeMentorRepositoryTest {
                 "Mentor User",
                 UserRole.MENTOR);
 
-        Optional<Mentor> result = repository.findByUser(user);
+        Optional<Mentor> result = fakeMentorRepository.findByUser(user);
 
         assertThat(result).isPresent();
         assertThat(result.get().getUser().getEmail()).isEqualTo("mentor1@example.com");
@@ -69,11 +73,11 @@ public class FakeMentorRepositoryTest {
                 user,
                 "Kakao",
                 "Frontend Developer",
-                "Frontend",
+                 fakeJobCategoryRepository.findByParentId(1L).get(0),
                 3,
                 "React 기반 프론트엔드 개발 경험이 있습니다.");
 
-        Mentor saved = repository.save(mentor);
+        Mentor saved = fakeMentorRepository.save(mentor);
         assertThat(saved.getId()).isNotNull();
         assertThat(saved.getCompanyName()).isEqualTo("Kakao");
         assertThat(saved.getPosition()).isEqualTo("Frontend Developer");
@@ -83,8 +87,8 @@ public class FakeMentorRepositoryTest {
         assertThat(saved.getVerificationStatus()).isEqualTo(VerificationStatus.PENDING);
         assertThat(saved.getVisibilityStatus()).isEqualTo(VisibilityStatus.PUBLIC);
 
-        assertThat(repository.findAll()).hasSize(6);
-        assertThat(repository.existsByUserEmail("new-mentor@example.com")).isTrue();
+        assertThat(fakeMentorRepository.findAll()).hasSize(6);
+        assertThat(fakeMentorRepository.existsByUserEmail("new-mentor@example.com")).isTrue();
     }
 
 }

@@ -1,6 +1,8 @@
 package com.careerbridge.mentor.service;
 
 import com.careerbridge.global.security.AuthenticatedUser;
+import com.careerbridge.jobcategory.domain.JobCategory;
+import com.careerbridge.jobcategory.repository.JobCategoryRepository;
 import com.careerbridge.mentor.dto.MentorProfileRequest;
 import com.careerbridge.mentor.dto.MentorProfileResponse;
 import com.careerbridge.mentor.dto.MentorSearchRequest;
@@ -26,11 +28,13 @@ public class MentorService {
 
     private final UserRepository userRepository;
 
+    private final JobCategoryRepository jobCategoryRepository;
+
     public List<MentorSearchResponse> searchMentors(MentorSearchRequest request){
         return mentorRepository.findAll()
                 .stream()
                 .filter(Mentor::isSearchable)
-                .filter(mentor -> mentor.matchesCategory(request.jobCategory()))
+                .filter(mentor -> mentor.matchesCategory(request.jobCategoryId()))
                 .filter(mentor -> mentor.matchesKeyword(request.keyword()))
                 .map(MentorSearchResponse::from)
                 .collect(Collectors.toUnmodifiableList());
@@ -44,11 +48,14 @@ public class MentorService {
             throw new IllegalArgumentException("이미 멘토 프로필이 존재합나다");
         }
 
+        JobCategory jobCategory = jobCategoryRepository.findById(request.jobCategoryId())
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 직무 카테고리입니다."));
+
         Mentor mentor = Mentor.create(null,
                                         user,
                                         request.companyName(),
                                         request.position(),
-                                        request.jobCategory(),
+                                        jobCategory,
                                         request.personalHistory(),
                                         request.introduction());
         Mentor saved = mentorRepository.save(mentor);
@@ -70,10 +77,13 @@ public class MentorService {
         Mentor mentor = mentorRepository.findByUser(user)
                 .orElseThrow(() -> new IllegalArgumentException("본인 프로필만 수정할 수 있습니다."));
 
+        JobCategory jobCategory = jobCategoryRepository.findById(request.jobCategoryId())
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 직무 카테고리입니다."));
+
         mentor.update(
                 request.companyName(),
                 request.position(),
-                request.jobCategory(),
+                jobCategory,
                 request.personalHistory(),
                 request.introduction()
         );
