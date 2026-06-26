@@ -39,7 +39,7 @@ public class MentorProfileServiceTest {
                 "백엔드 개발자",
                 "개발",
                 10,
-                "Spring 기반 백엔드 개발을 하고 있습니다."
+                "Spring 기반 백엔드 개발 경험이 있습니다."
         );
 
         MentorProfileResponse response = mentorService.create(user, request);
