@@ -1,11 +1,15 @@
 package com.careerbridge.mentor.service;
 
+import com.careerbridge.jobcategory.domain.JobCategory;
+import com.careerbridge.jobcategory.repository.FakeJobCategoryRepository;
+import com.careerbridge.jobcategory.repository.JobCategoryRepository;
 import com.careerbridge.mentor.dto.MentorProfileRequest;
 import com.careerbridge.mentor.dto.MentorProfileResponse;
 import com.careerbridge.mentor.repository.FakeMentorRepository;
 import com.careerbridge.mentor.repository.MentorRepository;
 import com.careerbridge.user.entity.User;
 import com.careerbridge.user.entity.UserRole;
+import com.careerbridge.user.repository.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -19,9 +23,10 @@ public class MentorProfileServiceTest {
 
     @BeforeEach
     void setUp() {
-        MentorRepository repository = new FakeMentorRepository();
+        MentorRepository repository1 = new FakeMentorRepository();
+        JobCategoryRepository repository2 = new FakeJobCategoryRepository();
 
-        mentorService = new MentorService(repository, null, null);
+        mentorService = new MentorService(repository1, null, repository2);
     }
 
     @Test
