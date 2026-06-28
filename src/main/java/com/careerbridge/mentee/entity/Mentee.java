@@ -70,4 +70,5 @@ public class Mentee {
                                 List<JobCategory> jobCategories){
         return new Mentee(id, user, jobCategories);
     }
+
 }
