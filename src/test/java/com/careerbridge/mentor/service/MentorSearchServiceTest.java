@@ -1,11 +1,9 @@
-package com.careerbridge.Mentor.Service;
+package com.careerbridge.mentor.service;
 
 import com.careerbridge.mentor.dto.MentorSearchRequest;
 import com.careerbridge.mentor.dto.MentorSearchResponse;
 import com.careerbridge.mentor.repository.FakeMentorRepository;
 import com.careerbridge.mentor.repository.MentorRepository;
-import com.careerbridge.mentor.service.MentorService;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

@@ -1,7 +1,6 @@
-package com.careerbridge.Mentor.Repository;
+package com.careerbridge.mentor.repository;
 
 import com.careerbridge.mentor.entity.Mentor;
-import com.careerbridge.mentor.repository.FakeMentorRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -12,7 +11,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 public class FakeMentorRepositoryTest {
 
-    private  FakeMentorRepository repository;
+    private FakeMentorRepository repository;
 
     @BeforeEach
     void setUp() {

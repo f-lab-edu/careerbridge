@@ -8,7 +8,7 @@ import lombok.Getter;
 
 @Entity
 @Table(name = "mentor")
-@Data
+@Getter
 public class Mentor {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
