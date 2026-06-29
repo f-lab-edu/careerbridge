@@ -73,7 +73,7 @@ public class FakeMentorRepositoryTest {
                 user,
                 "Kakao",
                 "Frontend Developer",
-                 fakeJobCategoryRepository.findByParentId(1L).get(0),
+                 fakeJobCategoryRepository.findByParentId(3L).get(0),
                 3,
                 "React 기반 프론트엔드 개발 경험이 있습니다.");
 
@@ -81,13 +81,13 @@ public class FakeMentorRepositoryTest {
         assertThat(saved.getId()).isNotNull();
         assertThat(saved.getCompanyName()).isEqualTo("Kakao");
         assertThat(saved.getPosition()).isEqualTo("Frontend Developer");
-        assertThat(saved.getJobCategory()).isEqualTo("Frontend");
+        assertThat(saved.getJobCategory().getJobName()).isEqualTo("프론트엔드");
         assertThat(saved.getPersonalHistory()).isEqualTo(3);
         assertThat(saved.getIntroduction()).isEqualTo("React 기반 프론트엔드 개발 경험이 있습니다.");
         assertThat(saved.getVerificationStatus()).isEqualTo(VerificationStatus.PENDING);
         assertThat(saved.getVisibilityStatus()).isEqualTo(VisibilityStatus.PUBLIC);
 
-        assertThat(fakeMentorRepository.findAll()).hasSize(6);
+        assertThat(fakeMentorRepository.findAll()).hasSize(4);
         assertThat(fakeMentorRepository.existsByUserEmail("new-mentor@example.com")).isTrue();
     }
 
