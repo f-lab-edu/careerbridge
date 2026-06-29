@@ -69,11 +69,15 @@ public class Mentor {
                 visibilityStatus == VisibilityStatus.PUBLIC;
     }
 
-    public boolean matchesCategory(Long jobCategoryId) {
-        if (jobCategoryId == null) {
-            return true;
+    public boolean matchesCategory(long jobCategoryId) {
+        return getRequiredJobCategoryId() == jobCategoryId;
+    }
+
+    private long getRequiredJobCategoryId(){
+        if (jobCategory == null || jobCategory.getId() == null) {
+            throw new IllegalArgumentException(" 멘토의 직무 카테고리가 올바르게 설정되지 않았습니다");
         }
-        return this.jobCategory.getId().equals(jobCategoryId);
+        return jobCategory.getId();
     }
 
     public boolean matchesKeyword(String keyword) {

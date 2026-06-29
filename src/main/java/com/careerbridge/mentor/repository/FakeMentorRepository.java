@@ -90,19 +90,28 @@ public class FakeMentorRepository implements MentorRepository {
                 .anyMatch(mentor -> mentor.getUser().getId().equals(id));
     }
 
-    @Override
     public Mentor save(Mentor mentor) {
-        Mentor saved = Mentor.create(
-                nextId++,
-                mentor.getUser(),
-                mentor.getCompanyName(),
-                mentor.getPosition(),
-                mentor.getJobCategory(),
-                mentor.getPersonalHistory(),
-                mentor.getIntroduction());
+        if (mentor.getId() == null) {
+            Mentor saved = new Mentor(
+                    nextId++,
+                    mentor.getUser(),
+                    mentor.getCompanyName(),
+                    mentor.getPosition(),
+                    mentor.getJobCategory(),
+                    mentor.getPersonalHistory(),
+                    mentor.getIntroduction(),
+                    mentor.getVerificationStatus(),
+                    mentor.getVisibilityStatus()
+            );
 
-        mentors.add(saved);
-        return saved;
+            mentors.add(saved);
+            return saved;
+        }
+
+        mentors.removeIf(existing -> existing.getId().equals(mentor.getId()));
+        mentors.add(mentor);
+
+        return mentor;
     }
 
     @Override

@@ -23,10 +23,10 @@ public class MentorProfileServiceTest {
 
     @BeforeEach
     void setUp() {
-        MentorRepository repository1 = new FakeMentorRepository();
-        JobCategoryRepository repository2 = new FakeJobCategoryRepository();
-
-        mentorService = new MentorService(repository1, null, repository2);
+        mentorService = new MentorService(
+                new FakeMentorRepository(),
+                null,
+                new FakeJobCategoryRepository());
     }
 
     @Test

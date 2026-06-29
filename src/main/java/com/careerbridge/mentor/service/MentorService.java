@@ -34,7 +34,7 @@ public class MentorService {
         return mentorRepository.findAll()
                 .stream()
                 .filter(Mentor::isSearchable)
-                .filter(mentor -> mentor.matchesCategory(request.jobCategoryId()))
+                .filter(mentor -> request.jobCategoryId() == null || mentor.matchesCategory(request.jobCategoryId()))
                 .filter(mentor -> mentor.matchesKeyword(request.keyword()))
                 .map(MentorSearchResponse::from)
                 .collect(Collectors.toUnmodifiableList());
