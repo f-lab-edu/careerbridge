@@ -3,16 +3,15 @@ package com.careerbridge.jobcategory.repository;
 import com.careerbridge.jobcategory.domain.JobCategory;
 import org.springframework.stereotype.Repository;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Repository
 public class FakeJobCategoryRepository implements JobCategoryRepository{
-    private final List<JobCategory> categories;
+    private final Map<Long, JobCategory> categoryDictionary;
 
     public FakeJobCategoryRepository() {
+
 
         JobCategory development = new JobCategory(
                 1L,
@@ -20,6 +19,8 @@ public class FakeJobCategoryRepository implements JobCategoryRepository{
                 null,
                 new ArrayList<>()
         );
+
+
 
         JobCategory backend = new JobCategory(
                 2L,
@@ -47,21 +48,23 @@ public class FakeJobCategoryRepository implements JobCategoryRepository{
         );
 
 
-        this.categories = List.of(
-                development,
-                backend,
-                frontend,
-                devOps
+
+        this.categoryDictionary = Map.of(
+                1L, development,
+                2L, backend,
+                3L, frontend,
+                4L, devOps
         );
     }
     @Override
     public List<JobCategory> findAll() {
-        return categories;
+        return categoryDictionary.values().stream()
+                .toList();
     }
 
     @Override
     public List<JobCategory> findByParentIsNull() {
-        return categories.stream()
+        return categoryDictionary.values().stream()
                 .filter(category -> category.getParent() == null).collect(Collectors.toUnmodifiableList());
     }
 
