@@ -1,5 +1,6 @@
 package com.careerbridge.mentor.entity;
 
+import com.careerbridge.jobcategory.domain.JobCategory;
 import com.careerbridge.user.entity.User;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
@@ -21,8 +22,9 @@ public class Mentor {
     @Column(nullable = false)
     private String position;
 
-    @Column(nullable = false)
-    private String jobCategory;
+    @ManyToOne
+    @JoinColumn(name = "job_category_id", nullable = false)
+    private JobCategory jobCategory;
 
     @Column(nullable = false)
     private Integer personalHistory;
@@ -45,7 +47,7 @@ public class Mentor {
     }
 
     public Mentor(Long id, User user, String companyName,
-                  String position, String jobCategory, int personalHistory,
+                  String position, JobCategory jobCategory, int personalHistory,
                   String introduction, VerificationStatus verificationStatus, VisibilityStatus visibilityStatus){
         this.id = id;
         this.user = user;
@@ -67,11 +69,15 @@ public class Mentor {
                 visibilityStatus == VisibilityStatus.PUBLIC;
     }
 
-    public boolean matchesCategory(String jobCategory) {
-        if (jobCategory == null || jobCategory.isBlank()) {
-            return true;
+    public boolean matchesCategory(long jobCategoryId) {
+        return getRequiredJobCategoryId() == jobCategoryId;
+    }
+
+    private long getRequiredJobCategoryId(){
+        if (jobCategory == null || jobCategory.getId() == null) {
+            throw new IllegalArgumentException(" 멘토의 직무 카테고리가 올바르게 설정되지 않았습니다");
         }
-        return this.jobCategory.equalsIgnoreCase(jobCategory);
+        return jobCategory.getId();
     }
 
     public boolean matchesKeyword(String keyword) {
@@ -87,5 +93,42 @@ public class Mentor {
                 || introduction.toLowerCase().contains(lowerKeyword);
     }
 
+    public void update(String companyName,
+                       String position,
+                       JobCategory jobCategory,
+                       Integer personalHistory,
+                       String introduction){
+        this.companyName = companyName;
+        this.position = position;
+        this.jobCategory = jobCategory;
+        this.personalHistory = personalHistory;
+        this.introduction = introduction;
+    }
+
+    public static Mentor create(
+            Long id,
+            User user,
+            String companyName,
+            String position,
+            JobCategory jobCategory,
+            int personalHistory,
+            String introduction
+    ) {
+        if (personalHistory < 0) {
+            throw new IllegalArgumentException("경력은 0 이상이어야 합니다.");
+        }
+
+        return new Mentor(
+                id,
+                user,
+                companyName,
+                position,
+                jobCategory,
+                personalHistory,
+                introduction,
+                VerificationStatus.PENDING,
+                VisibilityStatus.PUBLIC
+        );
+    }
 
 }

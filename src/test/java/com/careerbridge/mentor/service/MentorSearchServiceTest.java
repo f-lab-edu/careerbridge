@@ -22,7 +22,7 @@ public class MentorSearchServiceTest {
         MentorRepository repository =
                 new FakeMentorRepository();
 
-        mentorService = new MentorService(repository);
+        mentorService = new MentorService(repository, null, null);
     }
 
     @Test
@@ -45,7 +45,7 @@ public class MentorSearchServiceTest {
     @Test
     @DisplayName("카테고리로 멘토를 검색할 수 있다")
     void searchByCategory(){
-        MentorSearchRequest request = new MentorSearchRequest("Backend", null);
+        MentorSearchRequest request = new MentorSearchRequest(1L, null);
 
         List<MentorSearchResponse> result = mentorService.searchMentors(request);
 
@@ -86,7 +86,7 @@ public class MentorSearchServiceTest {
         // given
         MentorSearchRequest request =
                 new MentorSearchRequest(
-                        "Backend",
+                        1L,
                         null
                 );
 
@@ -108,7 +108,7 @@ public class MentorSearchServiceTest {
         // given
         MentorSearchRequest request =
                 new MentorSearchRequest(
-                        "요리사",
+                        6L,
                         "Cook"
                 );
 
