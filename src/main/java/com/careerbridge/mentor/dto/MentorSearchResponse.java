@@ -1,6 +1,5 @@
 package com.careerbridge.mentor.dto;
 
-import com.careerbridge.jobcategory.domain.JobCategory;
 import com.careerbridge.mentor.entity.Mentor;
 
 public record MentorSearchResponse(

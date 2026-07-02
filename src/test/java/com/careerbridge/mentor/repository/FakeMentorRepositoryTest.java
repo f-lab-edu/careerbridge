@@ -1,8 +1,6 @@
 package com.careerbridge.mentor.repository;
 
 import com.careerbridge.jobcategory.repository.FakeJobCategoryRepository;
-import com.careerbridge.mentor.dto.MentorProfileRequest;
-import com.careerbridge.mentor.dto.MentorProfileResponse;
 import com.careerbridge.mentor.entity.Mentor;
 import com.careerbridge.mentor.entity.VerificationStatus;
 import com.careerbridge.mentor.entity.VisibilityStatus;
@@ -37,14 +35,14 @@ public class FakeMentorRepositoryTest {
         List<Mentor> mentors = fakeMentorRepository.findAll();
 
         // then
-        assertThat(mentors).hasSize(5);
+        assertThat(mentors).hasSize(3);
     }
 
     @Test
     @DisplayName("이메일 기준으로 멘토 프로필 존재 여부를 확인할 수 있다")
     void existsByUserEmail() {
-        assertThat(fakeMentorRepository.existsByUserEmail("mentor@example.com")).isTrue();
-        assertThat(fakeMentorRepository.existsByUserEmail("unknown@example.com")).isTrue();
+        assertThat(fakeMentorRepository.existsByUserEmail("mentor1@example.com")).isTrue();
+        assertThat(fakeMentorRepository.existsByUserEmail("unknown@example.com")).isFalse();
     }
 
     @Test

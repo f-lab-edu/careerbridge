@@ -1,10 +1,8 @@
 package com.careerbridge.jobcategory.service;
 
 import com.careerbridge.jobcategory.domain.JobCategory;
-import com.careerbridge.jobcategory.dto.JobCategoryRequest;
 import com.careerbridge.jobcategory.dto.JobCategoryResponse;
 import com.careerbridge.jobcategory.repository.JobCategoryRepository;
-import com.careerbridge.mentor.dto.MentorProfileRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
