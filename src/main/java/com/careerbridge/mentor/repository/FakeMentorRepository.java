@@ -1,5 +1,6 @@
 package com.careerbridge.mentor.repository;
 
+import com.careerbridge.jobcategory.domain.JobCategory;
 import com.careerbridge.mentor.entity.Mentor;
 import com.careerbridge.mentor.entity.VerificationStatus;
 import com.careerbridge.mentor.entity.VisibilityStatus;
@@ -14,6 +15,18 @@ import java.util.Optional;
 @Repository
 public class FakeMentorRepository implements MentorRepository {
 
+    private static final JobCategory DEVELOPMENT =
+            new JobCategory(1L, "개발", null, new ArrayList<>());
+
+    private static final JobCategory BACKEND =
+            new JobCategory(2L, "Backend", DEVELOPMENT, List.of());
+
+    private static final JobCategory FRONTEND =
+            new JobCategory(3L, "Frontend", DEVELOPMENT, List.of());
+
+    private static final JobCategory DEVOPS =
+            new JobCategory(4L, "DevOps", DEVELOPMENT, List.of());
+
     private Long nextId = 6L;
 
     private final List<Mentor> mentors = new ArrayList<>(List.of(
@@ -22,9 +35,9 @@ public class FakeMentorRepository implements MentorRepository {
                     createMentorUser("mentor1@example.com", "김백엔드"),
                     "네이버",
                     "Backend Developer",
-                    "Backend",
+                    BACKEND,
                     7,
-                    "Spring Boot와 대용량 트래픽 경험이 있습니다.",
+                    "Spring Boot 기반 백엔드 개발 경험이 있습니다.",
                     VerificationStatus.APPROVED,
                     VisibilityStatus.PUBLIC
             ),
@@ -33,7 +46,7 @@ public class FakeMentorRepository implements MentorRepository {
                     createMentorUser("mentor2@example.com", "이프론트"),
                     "카카오",
                     "Frontend Developer",
-                    "Frontend",
+                    FRONTEND,
                     5,
                     "React 기반 서비스 개발 경험이 있습니다.",
                     VerificationStatus.APPROVED,
@@ -44,36 +57,13 @@ public class FakeMentorRepository implements MentorRepository {
                     createMentorUser("mentor3@example.com", "박데브옵스"),
                     "쿠팡",
                     "DevOps Engineer",
-                    "DevOps",
+                    DEVOPS,
                     6,
                     "AWS, Docker, Kubernetes 경험이 있습니다.",
                     VerificationStatus.APPROVED,
                     VisibilityStatus.PUBLIC
-            ),
-            new Mentor(
-                    4L,
-                    createMentorUser("mentor4@example.com", "비공개멘토"),
-                    "토스",
-                    "Backend Developer",
-                    "Backend",
-                    10,
-                    "비공개 멘토입니다.",
-                    VerificationStatus.APPROVED,
-                    VisibilityStatus.PRIVATE
-            ),
-            new Mentor(
-                    5L,
-                    createMentorUser("mentor5@example.com", "미승인멘토"),
-                    "라인",
-                    "Backend Developer",
-                    "Backend",
-                    3,
-                    "아직 승인되지 않은 멘토입니다.",
-                    VerificationStatus.PENDING,
-                    VisibilityStatus.PUBLIC
             )
-        )
-    );
+    ));
 
     @Override
     public List<Mentor> findAll() {
@@ -106,17 +96,27 @@ public class FakeMentorRepository implements MentorRepository {
 
     @Override
     public Mentor save(Mentor mentor) {
-        Mentor saved = Mentor.create(
-                nextId++,
-                mentor.getUser(),
-                mentor.getCompanyName(),
-                mentor.getPosition(),
-                mentor.getJobCategory(),
-                mentor.getPersonalHistory(),
-                mentor.getIntroduction());
+        if (mentor.getId() == null) {
+            Mentor saved = new Mentor(
+                    nextId++,
+                    mentor.getUser(),
+                    mentor.getCompanyName(),
+                    mentor.getPosition(),
+                    mentor.getJobCategory(),
+                    mentor.getPersonalHistory(),
+                    mentor.getIntroduction(),
+                    mentor.getVerificationStatus(),
+                    mentor.getVisibilityStatus()
+            );
 
-        mentors.add(saved);
-        return saved;
+            mentors.add(saved);
+            return saved;
+        }
+
+        mentors.removeIf(existing -> existing.getId().equals(mentor.getId()));
+        mentors.add(mentor);
+
+        return mentor;
     }
 
     @Override

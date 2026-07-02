@@ -7,7 +7,7 @@ public record MentorSearchResponse(
         String mentorName,
         String companyName,
         String position,
-        String jobCategory,
+        Long jobCategoryId,
         int personalHistory,
         String introduction
 ) {
@@ -17,7 +17,7 @@ public record MentorSearchResponse(
                 mentor.getMentorName(),
                 mentor.getCompanyName(),
                 mentor.getPosition(),
-                mentor.getJobCategory(),
+                mentor.getJobCategory().getId(),
                 mentor.getPersonalHistory(),
                 mentor.getIntroduction());
     }

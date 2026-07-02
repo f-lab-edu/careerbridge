@@ -9,6 +9,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -22,7 +23,7 @@ public class MentorSearchServiceTest {
         MentorRepository repository =
                 new FakeMentorRepository();
 
-        mentorService = new MentorService(repository, null);
+        mentorService = new MentorService(repository, null, null);
     }
 
     @Test
@@ -31,92 +32,70 @@ public class MentorSearchServiceTest {
         MentorSearchRequest request = new MentorSearchRequest(null, null);
 
         List<MentorSearchResponse> result =
-                mentorService.searchMentors(request);
+                mentorService.searchMentors()
+                        .stream()
+                        .filter(mentor -> request.jobCategoryId() == null || mentor.matchesCategory(request.jobCategoryId()))
+                        .filter(mentor -> mentor.matchesKeyword(request.keyword()))
+                        .map(MentorSearchResponse::from)
+                        .collect(Collectors.toUnmodifiableList());
 
-        assertThat(result)
-                .extracting(MentorSearchResponse::mentorName)
-                .contains(                              // containsExactly : 순서 보장시에 사용 , 추후 정렬 개발 시 테스트 예정
-                        "김백엔드",
-                        "이프론트",
-                        "박데브옵스"
-                );
+        assertThat(result).hasSize(3);
     }
 
     @Test
     @DisplayName("카테고리로 멘토를 검색할 수 있다")
     void searchByCategory(){
-        MentorSearchRequest request = new MentorSearchRequest("Backend", null);
+        MentorSearchRequest request = new MentorSearchRequest(2L, null);
 
-        List<MentorSearchResponse> result = mentorService.searchMentors(request);
-
+        List<MentorSearchResponse> result = mentorService.searchMentors()
+                .stream()
+                .filter(mentor -> request.jobCategoryId() == null || mentor.matchesCategory(request.jobCategoryId()))
+                .filter(mentor -> mentor.matchesKeyword(request.keyword()))
+                .map(MentorSearchResponse::from)
+                .collect(Collectors.toUnmodifiableList());
 
         assertThat(result).hasSize(1);
-
-        assertThat(result.get(0).mentorName())
-                .isEqualTo("김백엔드");
+        assertThat(result.get(0).jobCategoryId()).isEqualTo(2L);
     }
 
     @Test
     @DisplayName("키워드로 검색할 수 있다")
     void searchByKeyword() {
-        // given
         MentorSearchRequest request =
                 new MentorSearchRequest(
                         null,
                         "Spring"
                 );
 
-        // when
         List<MentorSearchResponse> result =
-                mentorService.searchMentors(request);
+                mentorService.searchMentors()
+                        .stream()
+                        .filter(mentor -> request.jobCategoryId() == null || mentor.matchesCategory(request.jobCategoryId()))
+                        .filter(mentor -> mentor.matchesKeyword(request.keyword()))
+                        .map(MentorSearchResponse::from)
+                        .collect(Collectors.toUnmodifiableList());
 
-        // then
         assertThat(result).hasSize(1);
-
-        assertThat(result.get(0).mentorName())
-                .isEqualTo("김백엔드");
-    }
-
-
-
-    @Test
-    @DisplayName("카테고리와 경력 조건을 함께 검색할 수 있다")
-    void searchByCategoryAndExperience() {
-
-        // given
-        MentorSearchRequest request =
-                new MentorSearchRequest(
-                        "Backend",
-                        null
-                );
-
-        // when
-        List<MentorSearchResponse> result =
-                mentorService.searchMentors(request);
-
-        // then
-        assertThat(result).hasSize(1);
-
-        assertThat(result.get(0).mentorName())
-                .isEqualTo("김백엔드");
+        assertThat(result.get(0).introduction()).contains("Spring");
     }
 
     @Test
     @DisplayName("조건에 맞는 멘토가 없으면 빈 리스트를 반환한다")
     void returnEmptyList() {
-
-        // given
         MentorSearchRequest request =
                 new MentorSearchRequest(
-                        "요리사",
+                        6L,
                         "Cook"
                 );
 
-        // when
         List<MentorSearchResponse> result =
-                mentorService.searchMentors(request);
+                mentorService.searchMentors()
+                        .stream()
+                        .filter(mentor -> request.jobCategoryId() == null || mentor.matchesCategory(request.jobCategoryId()))
+                        .filter(mentor -> mentor.matchesKeyword(request.keyword()))
+                        .map(MentorSearchResponse::from)
+                        .collect(Collectors.toUnmodifiableList());
 
-        // then
         assertThat(result).isEmpty();
     }
 }

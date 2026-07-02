@@ -1,6 +1,6 @@
 package com.careerbridge.mentor.dto;
 
 public record MentorSearchRequest(
-        String jobCategory,
+        Long jobCategoryId,
         String keyword) {
 }

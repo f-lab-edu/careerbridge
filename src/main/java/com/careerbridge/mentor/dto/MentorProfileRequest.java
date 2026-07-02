@@ -6,13 +6,16 @@ import jakarta.validation.constraints.NotNull;
 
 public record MentorProfileRequest(
         @NotBlank
+        Long userId,
+
+        @NotBlank
         String companyName,
 
         @NotBlank
         String position,
 
         @NotBlank
-        String jobCategory,
+        Long jobCategoryId,
 
         @NotNull
         @Min(0)
