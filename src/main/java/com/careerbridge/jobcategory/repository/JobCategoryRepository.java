@@ -1,7 +1,6 @@
 package com.careerbridge.jobcategory.repository;
 
 import com.careerbridge.jobcategory.domain.JobCategory;
-import org.springframework.boot.autoconfigure.batch.BatchProperties;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
