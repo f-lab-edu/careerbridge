@@ -24,7 +24,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @RestController
 @RequiredArgsConstructor
@@ -41,11 +40,9 @@ public class MentorController {
     ) {
         MentorSearchRequest request = new MentorSearchRequest(jobCategoryId, keyword);
 
-        List<MentorSearchResponse> response = mentorService.searchMentors()
+        List<MentorSearchResponse> response = mentorService
+                .searchMentors(request.jobCategoryId(), request.keyword())
                 .stream()
-                .filter(Mentor::isSearchable)
-                .filter(mentor -> request.jobCategoryId() == null || mentor.matchesCategory(request.jobCategoryId()))
-                .filter(mentor -> mentor.matchesKeyword(request.keyword()))
                 .map(MentorSearchResponse::from)
                 .toList();
 
@@ -57,11 +54,16 @@ public class MentorController {
             @AuthenticationPrincipal AuthenticatedUser authenticatedUser,
             @RequestBody MentorProfileRequest request
     ) {
-        Mentor mentor = toMentor(authenticatedUser.email(), request);
-        Mentor saved = mentorService.create(mentor);
+        Mentor saved = mentorService.create(
+                authenticatedUser.email(),
+                request.companyName(),
+                request.position(),
+                request.jobCategoryId(),
+                request.personalHistory(),
+                request.introduction()
+        );
 
-        return ResponseEntity
-                .status(HttpStatus.CREATED)
+        return ResponseEntity.status(HttpStatus.CREATED)
                 .body(MentorProfileResponse.from(saved));
     }
 
@@ -70,27 +72,15 @@ public class MentorController {
             @AuthenticationPrincipal AuthenticatedUser authenticatedUser,
             @RequestBody MentorProfileRequest request
     ) {
-        Mentor mentor = toMentor(authenticatedUser.email(), request);
-        mentorService.update(mentor);
-
-        return ResponseEntity.noContent().build();
-    }
-
-    private Mentor toMentor(String email, MentorProfileRequest request) {
-        User user = userRepository.findByEmailAndStatus(email, UserStatus.ACTIVE)
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 사용자입니다."));
-
-        JobCategory jobCategory = jobCategoryRepository.findById(request.jobCategoryId())
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 직무 카테고리입니다."));
-
-        return Mentor.create(
-                null,
-                user,
+        mentorService.update(
+                authenticatedUser.email(),
                 request.companyName(),
                 request.position(),
-                jobCategory,
+                request.jobCategoryId(),
                 request.personalHistory(),
                 request.introduction()
         );
+
+        return ResponseEntity.noContent().build();
     }
 }
