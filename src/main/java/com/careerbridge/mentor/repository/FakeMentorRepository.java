@@ -5,7 +5,6 @@ import com.careerbridge.mentor.entity.VerificationStatus;
 import com.careerbridge.mentor.entity.VisibilityStatus;
 import com.careerbridge.user.entity.User;
 import com.careerbridge.user.entity.UserRole;
-import com.careerbridge.user.entity.UserStatus;
 import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
@@ -78,7 +77,12 @@ public class FakeMentorRepository implements MentorRepository {
 
     @Override
     public List<Mentor> findAll() {
-        return mentors;
+        return List.of();
+    }
+
+    @Override
+    public List<Mentor> search(Long jobCategoryId, String keyword) {
+        return null;
     }
 
     @Override

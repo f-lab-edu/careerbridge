@@ -30,7 +30,7 @@ public class FakeMentorRepositoryTest {
     void findAll() {
 
         // when
-        List<Mentor> mentors = repository.findAll();
+        List<Mentor> mentors = repository.search(1L,"개발");
 
         // then
         assertThat(mentors).hasSize(5);
@@ -69,7 +69,7 @@ public class FakeMentorRepositoryTest {
                 user,
                 "Kakao",
                 "Frontend Developer",
-                "Frontend",
+                "123",
                 3,
                 "React 기반 프론트엔드 개발 경험이 있습니다.");
 
@@ -83,7 +83,7 @@ public class FakeMentorRepositoryTest {
         assertThat(saved.getVerificationStatus()).isEqualTo(VerificationStatus.PENDING);
         assertThat(saved.getVisibilityStatus()).isEqualTo(VisibilityStatus.PUBLIC);
 
-        assertThat(repository.findAll()).hasSize(6);
+        assertThat(repository.search(1L,"개발")).hasSize(6);
         assertThat(repository.existsByUserEmail("new-mentor@example.com")).isTrue();
     }
 

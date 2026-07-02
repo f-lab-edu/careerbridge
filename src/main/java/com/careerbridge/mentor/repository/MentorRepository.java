@@ -13,6 +13,8 @@ import java.util.Optional;
 public interface MentorRepository  {
     List<Mentor> findAll();
 
+    List<Mentor> search(Long jobCategoryId, String keyword);
+
     Optional<Mentor> findByUser(User user);
 
     Optional<Mentor> findById(Long id);
