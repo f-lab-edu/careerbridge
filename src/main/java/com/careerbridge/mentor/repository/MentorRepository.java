@@ -11,7 +11,7 @@ import java.util.Optional;
 
 @Repository
 public interface MentorRepository  {
-    List<Mentor> findAll();
+    List<Mentor> search(Long jobCategoryId, String keyword);
 
     Optional<Mentor> findByUser(User user);
 

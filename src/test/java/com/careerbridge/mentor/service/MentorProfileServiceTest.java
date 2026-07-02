@@ -2,67 +2,77 @@ package com.careerbridge.mentor.service;
 
 import com.careerbridge.jobcategory.repository.FakeJobCategoryRepository;
 import com.careerbridge.mentor.dto.MentorProfileRequest;
-import com.careerbridge.mentor.dto.MentorProfileResponse;
 import com.careerbridge.mentor.entity.Mentor;
 import com.careerbridge.mentor.repository.FakeMentorRepository;
 import com.careerbridge.user.entity.User;
 import com.careerbridge.user.entity.UserRole;
+import com.careerbridge.user.entity.UserStatus;
+import com.careerbridge.user.repository.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+import java.util.Optional;
+
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
-public class MentorProfileServiceTest {
+class MentorProfileServiceTest {
 
+    private UserRepository userRepository;
     private MentorService mentorService;
-    private FakeJobCategoryRepository fakeJobCategoryRepository;
 
     @BeforeEach
     void setUp() {
-        fakeJobCategoryRepository = new FakeJobCategoryRepository();
+        userRepository = mock(UserRepository.class);
+
         mentorService = new MentorService(
                 new FakeMentorRepository(),
-                null,
-                fakeJobCategoryRepository);
+                userRepository,
+                new FakeJobCategoryRepository()
+        );
     }
 
     @Test
-    @DisplayName("멘토_프로필을 등록할 수 있다")
-    void createMentorProfile(){
+    @DisplayName("멘토 프로필을 등록할 수 있다")
+    void createMentorProfile() {
         User user = User.create(
                 "new-mentor@example.com",
                 "EncodedPassword1!",
                 "New Mentor",
                 UserRole.MENTOR
         );
+
+        when(userRepository.findByEmailAndStatus(user.getEmail(), UserStatus.ACTIVE))
+                .thenReturn(Optional.of(user));
+
         MentorProfileRequest request = new MentorProfileRequest(
                 null,
                 "Naver",
-                "백엔드 개발자",
+                "Backend Developer",
                 2L,
                 10,
                 "Spring 기반 백엔드 개발 경험이 있습니다."
         );
-        Mentor mentor = Mentor.create(
-                null,
-                user,
+
+        Mentor saved = mentorService.create(
+                user.getEmail(),
                 request.companyName(),
                 request.position(),
-                fakeJobCategoryRepository.findById(request.jobCategoryId()).orElseThrow(),
+                request.jobCategoryId(),
                 request.personalHistory(),
                 request.introduction()
         );
 
-        MentorProfileResponse response = MentorProfileResponse.from(mentorService.create(mentor));
-
-        assertThat(response.id()).isNotNull();
-        assertThat(response.companyName()).isEqualTo("Naver");
-        assertThat(response.position()).isEqualTo("백엔드 개발자");
-        assertThat(response.jobCategoryId()).isEqualTo(2L);
-        assertThat(response.personalHistory()).isEqualTo(10);
-        assertThat(response.introduction()).isEqualTo("Spring 기반 백엔드 개발 경험이 있습니다.");
+        assertThat(saved.getId()).isNotNull();
+        assertThat(saved.getUser().getEmail()).isEqualTo("new-mentor@example.com");
+        assertThat(saved.getCompanyName()).isEqualTo("Naver");
+        assertThat(saved.getPosition()).isEqualTo("Backend Developer");
+        assertThat(saved.getJobCategory().getId()).isEqualTo(2L);
+        assertThat(saved.getPersonalHistory()).isEqualTo(10);
+        assertThat(saved.getIntroduction()).isEqualTo("Spring 기반 백엔드 개발 경험이 있습니다.");
     }
 
     @Test
@@ -75,6 +85,9 @@ public class MentorProfileServiceTest {
                 UserRole.MENTEE
         );
 
+        when(userRepository.findByEmailAndStatus(user.getEmail(), UserStatus.ACTIVE))
+                .thenReturn(Optional.of(user));
+
         MentorProfileRequest request = new MentorProfileRequest(
                 null,
                 "Naver",
@@ -83,17 +96,46 @@ public class MentorProfileServiceTest {
                 10,
                 "Spring 기반 백엔드 개발 경험이 있습니다."
         );
-        Mentor mentor = Mentor.create(
-                null,
-                user,
+
+        assertThatThrownBy(() -> mentorService.create(
+                user.getEmail(),
                 request.companyName(),
                 request.position(),
-                fakeJobCategoryRepository.findById(request.jobCategoryId()).orElseThrow(),
+                request.jobCategoryId(),
                 request.personalHistory(),
                 request.introduction()
+        )).isInstanceOf(IllegalArgumentException.class);
+    }
+
+    @Test
+    @DisplayName("존재하지 않는 직무 카테고리이면 멘토 프로필을 등록할 수 없다")
+    void createRejectsUnknownJobCategory() {
+        User user = User.create(
+                "new-mentor@example.com",
+                "EncodedPassword1!",
+                "New Mentor",
+                UserRole.MENTOR
         );
 
-        assertThatThrownBy(() -> mentorService.create(mentor))
-                .isInstanceOf(IllegalArgumentException.class);
+        when(userRepository.findByEmailAndStatus(user.getEmail(), UserStatus.ACTIVE))
+                .thenReturn(Optional.of(user));
+
+        MentorProfileRequest request = new MentorProfileRequest(
+                null,
+                "Naver",
+                "Backend Developer",
+                999L,
+                10,
+                "Spring 기반 백엔드 개발 경험이 있습니다."
+        );
+
+        assertThatThrownBy(() -> mentorService.create(
+                user.getEmail(),
+                request.companyName(),
+                request.position(),
+                request.jobCategoryId(),
+                request.personalHistory(),
+                request.introduction()
+        )).isInstanceOf(IllegalArgumentException.class);
     }
 }
