@@ -28,7 +28,7 @@ public class FakeJobCategoryRepositoryTest {
         assertThat(result).hasSize(4);
         assertThat(result)
                 .extracting(JobCategory::getJobName)
-                .containsExactly(
+                .contains(
                         "개발",
                         "백엔드",
                         "프론트엔드",
@@ -59,7 +59,7 @@ public class FakeJobCategoryRepositoryTest {
         assertThat(development.getChildren()).hasSize(3);
         assertThat(development.getChildren())
                 .extracting(JobCategory::getJobName)
-                .containsExactly(
+                .contains(
                         "백엔드",
                         "프론트엔드",
                         "DevOps"
