@@ -4,10 +4,10 @@ import com.careerbridge.jobcategory.domain.JobCategory;
 import com.careerbridge.user.entity.User;
 import jakarta.persistence.*;
 import lombok.Getter;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Entity
 @Table(name = "mentee")
@@ -55,13 +55,25 @@ public class Mentee {
         return user.getName();
     }
 
-    public void update(List<JobCategory> categories){
+    public void update(List<JobCategory> categories) {
         validateJobCategories(categories);
 
-        jobCategories.clear();
+        Set<Long> requestedCategoryIds = categories.stream()
+                .map(JobCategory::getId)
+                .collect(Collectors.toSet());
 
-        for(JobCategory category : categories){
-            jobCategories.add(MenteeJobCategory.create(this,category));
+        this.jobCategories.removeIf(menteeJobCategory ->
+                !requestedCategoryIds.contains(menteeJobCategory.getJobCategory().getId())
+        );
+
+        Set<Long> currentCategoryIds = jobCategories.stream()
+                .map(menteeJobCategory -> menteeJobCategory.getJobCategory().getId())
+                .collect(Collectors.toSet());
+
+        for (JobCategory category : categories) {
+            if (!currentCategoryIds.contains(category.getId())) {
+                jobCategories.add(MenteeJobCategory.create(this, category));
+            }
         }
     }
 

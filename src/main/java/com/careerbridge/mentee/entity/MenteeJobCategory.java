@@ -38,6 +38,6 @@ public class MenteeJobCategory {
     }
 
     public static MenteeJobCategory create( Mentee mentee, JobCategory jobCategory){
-        return new MenteeJobCategory(null, mentee,jobCategory);
+        return new MenteeJobCategory(null, mentee, jobCategory);
     }
 }
