@@ -55,26 +55,12 @@ public class Mentee {
         return user.getName();
     }
 
-    public void update(List<JobCategory> categories) {
+    public void update(List<JobCategory> categories){
         validateJobCategories(categories);
 
-        Set<Long> requestedCategoryIds = categories.stream()
-                .map(JobCategory::getId)
-                .collect(Collectors.toSet());
+        this.jobCategories = categories.stream().map(c ->
+                MenteeJobCategory.create(this, c)).collect(Collectors.toUnmodifiableList());
 
-        this.jobCategories.removeIf(menteeJobCategory ->
-                !requestedCategoryIds.contains(menteeJobCategory.getJobCategory().getId())
-        );
-
-        Set<Long> currentCategoryIds = jobCategories.stream()
-                .map(menteeJobCategory -> menteeJobCategory.getJobCategory().getId())
-                .collect(Collectors.toSet());
-
-        for (JobCategory category : categories) {
-            if (!currentCategoryIds.contains(category.getId())) {
-                jobCategories.add(MenteeJobCategory.create(this, category));
-            }
-        }
     }
 
     public static Mentee create(Long id,
