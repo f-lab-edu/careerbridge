@@ -23,7 +23,7 @@ public class Mentee {
     private User user;
 
     @OneToMany(mappedBy = "mentee", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<MenteeJobCategory> jobCategories = new ArrayList<>();
+    private List<MenteeJobCategory> jobCategories;
 
 
     private void validateJobCategories(List<JobCategory> categories) {
