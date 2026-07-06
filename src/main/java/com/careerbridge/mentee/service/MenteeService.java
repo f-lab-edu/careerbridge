@@ -25,7 +25,7 @@ public class MenteeService {
     private final JobCategoryRepository jobCategoryRepository;
 
 
-    public Mentee create(User user, List<Long> jobCategoryIds) {
+    public Mentee create(User user, List<Long> jobCategoryIdList) {
         if(user.getRole() != UserRole.MENTEE){
             throw new IllegalArgumentException("멘티만 프로필을 등록할 수 있습니다");
         }
@@ -34,7 +34,7 @@ public class MenteeService {
             throw new IllegalArgumentException("이미 멘티 프로필이 존재합니다.");
         }
 
-        List<JobCategory> jobCategories = getJobCategories(jobCategoryIds);
+        List<JobCategory> jobCategories = getJobCategories(jobCategoryIdList);
 
         Mentee saved = Mentee.create(null, user, jobCategories);
 
@@ -42,7 +42,7 @@ public class MenteeService {
     }
 
     @Transactional
-    public void update(User user, List<Long> jobCategoryIds) {
+    public void update(User user, List<Long> jobCategoryIdList) {
         if (user.getRole() != UserRole.MENTEE) {
             throw new IllegalArgumentException("멘티만 프로필을 수정할 수 있습니다");
         }
@@ -50,13 +50,13 @@ public class MenteeService {
         Mentee updated = menteeRepository.findByUser(user)
                 .orElseThrow(() -> new IllegalArgumentException("멘티 프로필이 존재하지 않습니다"));
 
-        List<JobCategory> jobCategories = getJobCategories(jobCategoryIds);
+        List<JobCategory> jobCategories = getJobCategories(jobCategoryIdList);
 
         updated.update(jobCategories);
     }
 
-    private List<JobCategory> getJobCategories(List<Long> jobCategoryIds) {
-        return jobCategoryIds.stream()
+    private List<JobCategory> getJobCategories(List<Long> jobCategoryIdList) {
+        return jobCategoryIdList.stream()
                 .map(id -> jobCategoryRepository.findById(id)
                         .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 직무 카테고리입니다.")))
                 .toList();
