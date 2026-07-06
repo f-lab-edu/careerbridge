@@ -3,6 +3,7 @@ package com.careerbridge.mentee.controller;
 import com.careerbridge.global.response.ApiResponse;
 import com.careerbridge.global.security.AuthenticatedUser;
 import com.careerbridge.jobcategory.domain.JobCategory;
+import com.careerbridge.jobcategory.service.JobCategoryService;
 import com.careerbridge.mentee.dto.MenteeProfileRequest;
 import com.careerbridge.mentee.dto.MenteeProfileResponse;
 import com.careerbridge.mentee.entity.Mentee;
@@ -36,7 +37,7 @@ public class MenteeController {
             @Valid @RequestBody MenteeProfileRequest request
     ) {
         User user = userService.findActiveUserByEmail(authenticatedUser.email());
-        Mentee saved = menteeService.create(user, toMentee(user, request));
+        Mentee saved = menteeService.create(user, request.jobCategoryIdList());
 
         return ResponseEntity
                 .status(HttpStatus.CREATED)
@@ -52,16 +53,9 @@ public class MenteeController {
             @Valid @RequestBody MenteeProfileRequest request
     ) {
         User user = userService.findActiveUserByEmail(authenticatedUser.email());
-        menteeService.update(user, toMentee(user, request));
+        menteeService.update(user, request.jobCategoryIdList());
 
         return ResponseEntity.ok(ApiResponse.success("Mentee profile updated.", null));
     }
 
-    private Mentee toMentee(User user, MenteeProfileRequest request) {
-        List<JobCategory> jobCategories = request.jobCategoryIdList().stream()
-                .map(id -> new JobCategory(id, "", null, List.of()))
-                .toList();
-
-        return Mentee.create(null, user, jobCategories);
-    }
 }
