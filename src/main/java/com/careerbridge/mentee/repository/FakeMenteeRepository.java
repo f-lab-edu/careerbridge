@@ -2,9 +2,11 @@ package com.careerbridge.mentee.repository;
 
 import com.careerbridge.mentee.entity.Mentee;
 import com.careerbridge.mentee.entity.MenteeJobCategory;
+import com.careerbridge.user.entity.User;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public class FakeMenteeRepository implements MenteeRepository{
     private Long nextId = 1L;
@@ -20,6 +22,13 @@ public class FakeMenteeRepository implements MenteeRepository{
     public boolean existsByUserEmail(String email) {
         return mentees.stream()
                 .anyMatch(mentee -> mentee.getUser().getEmail().equals(email));
+    }
+
+    @Override
+    public Optional<Mentee> findByUser(User user) {
+        return mentees.stream()
+                .filter(mentee -> mentee.getUser().equals(user))
+                .findFirst();
     }
 
     @Override

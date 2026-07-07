@@ -70,12 +70,16 @@ public class FakeJobCategoryRepository implements JobCategoryRepository{
 
     @Override
     public List<JobCategory> findByParentId(Long parentId) {
-        return List.of();
+        return categories.stream()
+                .filter(category -> category.getParent() != null)
+                .filter(category -> category.getParent().getId().equals(parentId))
+                .collect(Collectors.toUnmodifiableList());
     }
 
     @Override
     public Optional<JobCategory> findById(Long id) {
-        return Optional.empty();
+        return categories.stream()
+                .filter(category -> category.getId().equals(id))
+                .findFirst();
     }
 }
-

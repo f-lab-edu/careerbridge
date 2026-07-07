@@ -1,13 +1,15 @@
 package com.careerbridge.mentee.dto;
 
-import com.careerbridge.jobcategory.domain.JobCategory;
-import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 
 import java.util.List;
 
 public record MenteeProfileRequest(
-        @NotBlank
+        @NotNull
         Long userId,
+
+        @NotEmpty
         List<Long> jobCategoryIdList
 ) {
 }
