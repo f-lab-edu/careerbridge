@@ -3,10 +3,6 @@ package com.careerbridge.product.service;
 import com.careerbridge.global.security.AuthenticatedUser;
 import com.careerbridge.mentor.entity.Mentor;
 import com.careerbridge.mentor.repository.MentorRepository;
-import com.careerbridge.product.dto.ProductCreateRequest;
-import com.careerbridge.product.dto.ProductResponse;
-import com.careerbridge.product.dto.ProductSearchRequest;
-import com.careerbridge.product.dto.ProductUpdateRequest;
 import com.careerbridge.product.entity.Product;
 import com.careerbridge.product.entity.ProductStatus;
 import com.careerbridge.product.repository.ProductRepository;
@@ -19,6 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -29,44 +26,46 @@ public class ProductService {
     private final MentorRepository mentorRepository;
     private final UserRepository userRepository;
 
-    public List<ProductResponse> searchProducts(ProductSearchRequest request) {
-        String keyword = normalizeKeyword(request.keyword());
+    public List<Product> searchProducts(Long mentorId, String keyword) {
 
         return productRepository.searchProducts(
-                        request.mentorId(),
-                        keyword,
+                        mentorId,
+                        normalizeKeyword(keyword),
                         ProductStatus.ACTIVE
-                )
-                .stream()
-                .map(ProductResponse::from)
-                .toList();
+                ).stream().collect(Collectors.toUnmodifiableList());
     }
 
     @Transactional
-    public ProductResponse create(
+    public Product create(
             AuthenticatedUser authenticatedUser,
-            ProductCreateRequest request
+            String title,
+            String description,
+            Integer price,
+            Integer duration
     ) {
+
         Mentor mentor = getAuthenticatedMentor(authenticatedUser);
 
         Product product = Product.create(
                 mentor,
-                request.title(),
-                request.description(),
-                request.price(),
-                request.duration()
+                title,
+                description,
+                price,
+                duration
         );
 
-        Product savedProduct = productRepository.save(product);
-
-        return ProductResponse.from(savedProduct);
+        return productRepository.save(product);
     }
 
     @Transactional
-    public ProductResponse update(
+    public void update(
             AuthenticatedUser authenticatedUser,
             Long productId,
-            ProductUpdateRequest request
+            String title,
+            String description,
+            Integer price,
+            Integer duration,
+            ProductStatus productStatus
     ) {
         Mentor mentor = getAuthenticatedMentor(authenticatedUser);
         Product product = getProduct(productId);
@@ -74,14 +73,12 @@ public class ProductService {
         validateProductOwner(product, mentor);
 
         product.update(
-                request.title(),
-                request.description(),
-                request.price(),
-                request.duration(),
-                request.productStatus()
+                title,
+                description,
+                price,
+                duration,
+                productStatus
         );
-
-        return ProductResponse.from(product);
     }
 
     @Transactional
@@ -116,7 +113,6 @@ public class ProductService {
         if (productId == null) {
             throw new IllegalArgumentException("상품 id가 필요합니다.");
         }
-
         return productRepository.findById(productId)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 상품입니다."));
     }
@@ -131,7 +127,6 @@ public class ProductService {
         if (keyword == null || keyword.isBlank()) {
             return null;
         }
-
         return keyword.trim();
     }
 }
