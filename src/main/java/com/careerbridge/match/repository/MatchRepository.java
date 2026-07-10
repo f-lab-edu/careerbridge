@@ -8,7 +8,6 @@ import java.util.List;
 
 @Repository
 public interface MatchRepository {
-
     List<Match> findByProduct_IdAndMentee_Id(Long productId, Long menteeId);
     List<Match> findByProduct_IdAndProduct_Mentor_Id(Long productId, Long mentorId);
 }
