@@ -1,5 +1,5 @@
 package com.careerbridge.payment.entity;
-
+// git test용 주석 추가
 import com.careerbridge.global.entity.BaseTimeEntity;
 import com.careerbridge.match.domain.Match;
 import jakarta.persistence.Entity;
