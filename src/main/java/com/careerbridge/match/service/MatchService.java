@@ -21,13 +21,13 @@ public class MatchService {
 
     public List<Match> SearchMatchByMentee(Long productId, Long menteeId){
         checkProductId(productId);
-        List<Match> matches = matchRepository.findByProduct_IdAndMentee_Id(productId,menteeId);
+        List<Match> matches = matchRepository.findByProductIdAndMenteeId(productId,menteeId);
         return matches;
     }
 
     public List<Match> SearchMatchByMentor(Long productId, Long mentorId){
         checkProductId(productId);
-        List<Match> matches = matchRepository.findByProduct_IdAndProduct_Mentor_Id(productId,mentorId);
+        List<Match> matches = matchRepository.findByProductIdAndProductMentorId(productId,mentorId);
         return matches;
     }
     private void checkProductId(Long productId){
