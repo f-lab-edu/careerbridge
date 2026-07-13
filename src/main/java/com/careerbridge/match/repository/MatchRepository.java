@@ -5,9 +5,12 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface MatchRepository {
-    List<Match> findByProduct_IdAndMentee_Id(Long productId, Long menteeId);
-    List<Match> findByProduct_IdAndProduct_Mentor_Id(Long productId, Long mentorId);
+
+    List<Match> findByProductIdAndMenteeId(Long productId, Long menteeId);
+    List<Match> findByProductIdAndProductMentorId(Long productId, Long mentorId);
+    Optional<Match> findByIdAndMenteeUserEmail(Long matchId, String email);
 }

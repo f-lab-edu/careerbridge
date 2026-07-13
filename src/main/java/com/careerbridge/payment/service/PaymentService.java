@@ -1,35 +1,41 @@
 package com.careerbridge.payment.service;
 
 import com.careerbridge.match.domain.Match;
+import com.careerbridge.match.domain.MatchStatus;
 import com.careerbridge.match.repository.MatchRepository;
-import com.careerbridge.match.service.MatchService;
 import com.careerbridge.mentee.entity.Mentee;
-import com.careerbridge.mentee.repository.MenteeRepository;
 import com.careerbridge.payment.entity.Payment;
 import com.careerbridge.payment.entity.PaymentMethod;
 import com.careerbridge.payment.entity.PaymentProvider;
+import com.careerbridge.payment.entity.PaymentStatus;
 import com.careerbridge.payment.repository.PaymentRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class PaymentService {
+
     private final PaymentRepository paymentRepository;
-    private final MenteeRepository menteeRepository;
+    private final MatchRepository matchRepository;
 
     @Transactional
-    public Payment ready(Payment payment) {
+    public Payment ready(String menteeEmail, Long matchId) {
+        Match match = matchRepository.findByIdAndMenteeUserEmail(matchId, menteeEmail)
+                .orElseThrow(() -> new IllegalArgumentException("결제 가능한 매칭을 찾을 수 없습니다."));
 
-        Mentee mentee = getMentee(payment.getMatch().getMentee().getUser().getEmail());
-        Match match = getMatch(payment.getMatch().getId());
+        if(match.getMatchStatus() != MatchStatus.APPROVED){
+            throw new IllegalStateException("승인된 매칭만 결제할 수 있습니다");
+        }
 
-        validateMatchOwner(match, mentee);
-        validatePayableMatch(match);
-        validateNotExistsPayment(match);
+        if (paymentRepository.existsByMatchId(match.getId())) {
+            throw new IllegalStateException("이미 결제가 생성된 매칭입니다");
+        }
 
         Payment payment = Payment.ready(
                 match,
@@ -48,33 +54,27 @@ public class PaymentService {
             String paymentKey,
             Integer requestedAmount
     ) {
-        Mentee mentee = getMentee(menteeEmail);
-        Payment payment = getPaymentByOrderId(orderId);
+        Payment payment = paymentRepository
+                .findByOrderIdAndMatchMenteeUserEmail(orderId, menteeEmail)
+                .orElseThrow(() -> new IllegalArgumentException("결제 정보를 찾을 수 없습니다"));
 
-        validatePaymentOwner(payment, mentee);
-        validateReadyPayment(payment);
-        validateAmount(payment, requestedAmount);
+        if (payment.getPaymentStatus() != PaymentStatus.READY) {
+            throw new IllegalStateException("결제 대기 상태가 아닙니다");
+        }
 
-        // 나중에 PG confirm API 호출
-        // TossConfirmResponse response = tossPaymentClient.confirm(...);
+        if (!payment.getAmount().equals(requestedAmount)) {
+            throw new IllegalArgumentException("결제 금액이 일치하지 않습니다");
+        }
 
-        payment.complete(paymentKey, PaymentMethod.CARD, LocalDateTime.now());
-        payment.getMatch().pay(LocalDateTime.now());
+        LocalDateTime paidAt = LocalDateTime.now();
+
+        payment.complete(paymentKey, PaymentMethod.CARD, paidAt);
+        payment.getMatch().pay(paidAt);
 
         return payment;
     }
 
-    private void checkVaildPayment(Payment payment){
-        if(paymentRepository.existsByMatchId(payment.getMatch().getId())){
-            throw new IllegalStateException("없는 결제입니다");
-        }
-
-        Payment check = paymentRepository.findByMatchId(payment.getMatch().getId())
-                .orElseThrow(() ->new IllegalArgumentException("없는 결제입니다"));
-
-        if(check != payment){
-            throw new IllegalStateException("같은 결제가 아닙니다");
-        }
-
+    private String createOrderId() {
+        return "payment-" + UUID.randomUUID();
     }
 }

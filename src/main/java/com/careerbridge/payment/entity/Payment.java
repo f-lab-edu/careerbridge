@@ -3,6 +3,7 @@ package com.careerbridge.payment.entity;
 import com.careerbridge.global.entity.BaseTimeEntity;
 import com.careerbridge.match.domain.Match;
 import jakarta.persistence.*;
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -10,7 +11,7 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Entity
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 public class Payment extends BaseTimeEntity {
     @Id
@@ -60,13 +61,58 @@ public class Payment extends BaseTimeEntity {
         this.canceledAt = canceledAt;
     }
 
+    public static Payment ready(
+            Match match,
+            Integer amount,
+            PaymentProvider paymentProvider,
+            String orderId
+    ) {
+        validatePayment(match, amount, paymentProvider, orderId);
+
+        return new Payment(
+                null,
+                match,
+                amount,
+                PaymentStatus.READY,
+                null,
+                paymentProvider,
+                orderId,
+                null,
+                null,
+                null,
+                null
+        );
+    }
+
     public void complete(String paymentKey, PaymentMethod method, LocalDateTime paidAt){
-        if(this.paymentStatus != PaymentStatus.READY){
-            throw new IllegalStateException("결제 대기 상태에서만 승인할 수 있습니다");
-        }
+        validatePayment(match, amount, paymentProvider, orderId);
+
         this.paymentKey = paymentKey;
         this.paymentMethod = method;
         this.paymentStatus = PaymentStatus.PAID;
         this.paidAt = paidAt;
+    }
+
+    private static void validatePayment(
+            Match match,
+            Integer amount,
+            PaymentProvider paymentProvider,
+            String orderId
+    ) {
+        if (match == null) {
+            throw new IllegalArgumentException("매칭 정보가 필요합니다.");
+        }
+
+        if (amount == null || amount <= 0) {
+            throw new IllegalArgumentException("결제 금액은 0보다 커야 합니다.");
+        }
+
+        if (paymentProvider == null) {
+            throw new IllegalArgumentException("결제 제공자가 필요합니다.");
+        }
+
+        if (orderId == null || orderId.isBlank()) {
+            throw new IllegalArgumentException("주문 번호가 필요합니다.");
+        }
     }
 }

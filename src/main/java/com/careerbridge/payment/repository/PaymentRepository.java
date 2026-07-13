@@ -9,7 +9,7 @@ public interface PaymentRepository {
 
     Optional<Payment> findById(Long id);
 
-    Optional<Payment> findByOrderId(String orderId);
+    Optional<Payment> findByOrderIdAndMatchMenteeUserEmail(String orderId, String email);
 
     Optional<Payment> findByMatchId(Long matchId);
 
