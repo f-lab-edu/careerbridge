@@ -89,10 +89,12 @@ public class Product extends BaseTimeEntity {
     }
 
     public void makeDeactivate() {
+
         this.productStatus = ProductStatus.INACTIVE;
     }
 
     public boolean isOwnedBy(Mentor mentor) {
+
         return mentor != null && this.mentor.getId().equals(mentor.getId());
     }
 
