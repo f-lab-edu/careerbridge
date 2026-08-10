@@ -3,9 +3,9 @@ package com.careerbridge.payment.service;
 import com.careerbridge.match.domain.Match;
 import com.careerbridge.match.domain.MatchStatus;
 import com.careerbridge.match.repository.MatchRepository;
-import com.careerbridge.mentee.entity.Mentee;
+import com.careerbridge.payment.client.TossPaymentClient;
 import com.careerbridge.payment.entity.Payment;
-import com.careerbridge.payment.entity.PaymentMethod;
+import com.careerbridge.payment.entity.PaymentApproval;
 import com.careerbridge.payment.entity.PaymentProvider;
 import com.careerbridge.payment.entity.PaymentStatus;
 import com.careerbridge.payment.repository.PaymentRepository;
@@ -23,6 +23,12 @@ public class PaymentService {
 
     private final PaymentRepository paymentRepository;
     private final MatchRepository matchRepository;
+    private final TossPaymentClient tossPaymentClient;
+
+    public Payment findById(String menteeEmail, Long paymentId) {
+        return paymentRepository.findByIdAndMatchMenteeUserEmail(paymentId, menteeEmail)
+                .orElseThrow(() -> new IllegalArgumentException("寃곗젣 ?뺣낫瑜?李얠쓣 ???놁뒿?덈떎"));
+    }
 
     @Transactional
     public Payment ready(String menteeEmail, Long matchId) {
@@ -33,7 +39,7 @@ public class PaymentService {
             throw new IllegalStateException("승인된 매칭만 결제할 수 있습니다");
         }
 
-        if (paymentRepository.existsByMatchId(match.getId())) {
+        if (paymentRepository.existsByMatchId(match.getId())){
             throw new IllegalStateException("이미 결제가 생성된 매칭입니다");
         }
 
@@ -66,10 +72,14 @@ public class PaymentService {
             throw new IllegalArgumentException("결제 금액이 일치하지 않습니다");
         }
 
-        LocalDateTime paidAt = LocalDateTime.now();
+        PaymentApproval approval = tossPaymentClient.confirm(
+                paymentKey,
+                orderId,
+                requestedAmount
+        );
 
-        payment.complete(paymentKey, PaymentMethod.CARD, paidAt);
-        payment.getMatch().pay(paidAt);
+        payment.complete(approval);
+        payment.getMatch().pay(approval.approvedAt());
 
         return payment;
     }
