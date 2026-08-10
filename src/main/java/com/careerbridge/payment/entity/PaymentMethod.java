@@ -1,5 +1,11 @@
 package com.careerbridge.payment.entity;
 
 public enum PaymentMethod {
-    KAKAO, TOSS, NAVER, CREDITCARD, PHONEBANKING
+    CARD,
+    TRANSFER,
+    PHONE,
+    VIRTUAL_ACCOUNT,
+    EASY_PAY,
+    GIFT_CERTIFICATE,
+    OTHER
 }
