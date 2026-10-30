@@ -244,6 +244,44 @@ class PaymentServiceTest {
                 .isInstanceOf(IllegalArgumentException.class);
     }
 
+    @Test
+    void readyRejectsMissingOrUnownedMatch() {
+        when(matchRepository.findByIdAndMenteeUserEmail(1L, MENTEE_EMAIL))
+                .thenReturn(Optional.empty());
+
+        assertThatThrownBy(() -> paymentService.ready(MENTEE_EMAIL, 1L))
+                .isInstanceOf(IllegalArgumentException.class);
+        verifyNoInteractions(paymentRepository, tossPaymentClient);
+    }
+
+    @Test
+    void confirmRejectsMissingOrUnownedPayment() {
+        when(paymentRepository.findByOrderIdAndMatchMenteeUserEmail(ORDER_ID, MENTEE_EMAIL))
+                .thenReturn(Optional.empty());
+
+        assertThatThrownBy(() -> paymentService.confirm(MENTEE_EMAIL, ORDER_ID, PAYMENT_KEY, 50_000))
+                .isInstanceOf(IllegalArgumentException.class);
+        verifyNoInteractions(tossPaymentClient);
+    }
+
+    @Test
+    void confirmKeepsStateWhenGatewayFails() {
+        Match match = createMatch(MatchStatus.APPROVED);
+        Payment payment = Payment.ready(match, 50_000, PaymentProvider.TOSS, ORDER_ID);
+        IllegalStateException failure = new IllegalStateException("Gateway unavailable");
+        when(paymentRepository.findByOrderIdAndMatchMenteeUserEmail(ORDER_ID, MENTEE_EMAIL))
+                .thenReturn(Optional.of(payment));
+        when(tossPaymentClient.confirm(PAYMENT_KEY, ORDER_ID, 50_000)).thenThrow(failure);
+
+        assertThatThrownBy(() -> paymentService.confirm(MENTEE_EMAIL, ORDER_ID, PAYMENT_KEY, 50_000))
+                .isSameAs(failure);
+        assertThat(payment.getPaymentStatus()).isEqualTo(PaymentStatus.READY);
+        assertThat(payment.getPaymentKey()).isNull();
+        assertThat(payment.getPaidAt()).isNull();
+        assertThat(match.getMatchStatus()).isEqualTo(MatchStatus.APPROVED);
+        assertThat(match.getPaidAt()).isNull();
+    }
+
     private Match createMatch(MatchStatus matchStatus) {
         JobCategory backend = new JobCategory(1L, "Backend", null, List.of());
         User mentorUser = User.create(
