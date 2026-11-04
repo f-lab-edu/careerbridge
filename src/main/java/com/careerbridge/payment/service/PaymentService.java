@@ -13,7 +13,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
+import java.util.Objects;
 import java.util.UUID;
 
 @Service
@@ -64,12 +64,26 @@ public class PaymentService {
                 .findByOrderIdAndMatchMenteeUserEmail(orderId, menteeEmail)
                 .orElseThrow(() -> new IllegalArgumentException("결제 정보를 찾을 수 없습니다"));
 
+        if (payment.getPaymentStatus() == PaymentStatus.PAID
+                && Objects.equals(payment.getPaymentKey(), paymentKey)
+                && Objects.equals(payment.getAmount(), requestedAmount)) {
+            return payment;
+        }
+
         if (payment.getPaymentStatus() != PaymentStatus.READY) {
             throw new IllegalStateException("결제 대기 상태가 아닙니다");
         }
 
         if (!payment.getAmount().equals(requestedAmount)) {
             throw new IllegalArgumentException("결제 금액이 일치하지 않습니다");
+        }
+
+        if (payment.getMatch().getMatchStatus() != MatchStatus.APPROVED) {
+            throw new IllegalStateException("Only approved matches can be paid.");
+        }
+
+        if (paymentKey == null || paymentKey.isBlank()) {
+            throw new IllegalArgumentException("Payment key is required.");
         }
 
         PaymentApproval approval = tossPaymentClient.confirm(

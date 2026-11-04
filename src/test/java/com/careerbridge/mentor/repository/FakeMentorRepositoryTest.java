@@ -1,5 +1,6 @@
 package com.careerbridge.mentor.repository;
 
+import com.careerbridge.jobcategory.repository.FakeJobCategoryRepository;
 import com.careerbridge.mentor.dto.MentorProfileRequest;
 import com.careerbridge.mentor.dto.MentorProfileResponse;
 import com.careerbridge.mentor.entity.Mentor;
@@ -65,6 +66,8 @@ public class FakeMentorRepositoryTest {
                 "New Mentor",
                 UserRole.MENTOR);
 
+        FakeJobCategoryRepository fakeJobCategoryRepository = null;
+        
         Mentor mentor = Mentor.create(null,
                 user,
                 "Kakao",
